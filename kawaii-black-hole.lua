@@ -113,151 +113,103 @@ local function C_a()
     local script = killscript
     local player = game.Players.LocalPlayer
     local button = script.Parent
-    local function buttonclicked()
-        local coolio = tonumber(timebox.Text)
-        local Players = game:GetService("Players")
-        local function findPlayer(input)
-            local inputLower = string.lower(input)
-            for _, player in ipairs(Players:GetPlayers()) do
-                local displayName = player.DisplayName
-                local username = player.Name
-                if string.lower(displayName) == inputLower then
-                    return player
-                end
-                for i = 1, #displayName do
-                    if string.lower(string.sub(displayName, 1, i)) == inputLower then
-                        return player
-                    end
-                end
-                if string.lower(username) == inputLower then
-                    return player
-                end
-                for i = 1, #username do
-                    if string.lower(string.sub(username, 1, i)) == inputLower then
-                        return player
-                    end
-                end
-            end
-            return nil
+  local function buttonclicked()
+    local coolio = tonumber(timebox.Text)
+    local Players = game:GetService("Players")
+
+    -- Function to find a player by their display name or username
+local function findPlayer(input)
+    local inputLower = string.lower(input)
+    for _, player in ipairs(Players:GetPlayers()) do
+        local displayName = player.DisplayName
+        local username = player.Name
+        -- Check if display name matches (exact or partial)
+        if string.find(string.lower(displayName), inputLower, 1, true) then
+            return player
         end
-        local input = targetbox.Text
-        local foundPlayer = findPlayer(input)
-        if foundPlayer then
-            print("Found player: " .. foundPlayer.Name)
-        else
-            print("Player not found")
+        -- Check if username matches (exact or partial)
+        if string.find(string.lower(username), inputLower, 1, true) then
+            return player
         end
-        local LocalPlayer = foundPlayer
-        local Forces = {}
-        local frozenParts = {}
-        if LocalPlayer and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Head") then
-            character = LocalPlayer.Character
-
-            local function handlePart(part)
-                if part:IsA("BasePart") then
-                    if
-                        not part.Anchored and not part:IsDescendantOf(character) and part.Name ~= "Torso" and
-                            part.Name ~= "Head" and
-                            part.Name ~= "Right Arm" and
-                            part.Name ~= "Left Arm" and
-                            part.Name ~= "Right Leg" and
-                            part.Name ~= "Left Leg" and
-                            part.Name ~= "HumanoidRootPart"
-                     then
-                        for _, c in pairs(part:GetChildren()) do
-                            if c:IsA("BodyPosition") or c:IsA("BodyGyro") then
-                                c:Destroy()
-                            end
-                        end
-                        local ForceInstance = Instance.new("BodyPosition")
-                        ForceInstance.Parent = part
-                        ForceInstance.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
-                        headPosition = character.Head.Position
-                        ForceInstance.Position = headPosition
-                        table.insert(Forces, ForceInstance)
-                        if not table.find(frozenParts, part) then
-                            table.insert(frozenParts, part)
-                        end
-                    end
-                elseif part:IsA("Model") then
-                    for _, child in pairs(part:GetChildren()) do
-                        if
-                            child:IsA("BasePart") and not child.Anchored and not child:IsDescendantOf(character) and
-                                child.Name ~= "Torso" and
-                                child.Name ~= "Head" and
-                                child.Name ~= "Right Arm" and
-                                child.Name ~= "Left Arm" and
-                                child.Name ~= "Right Leg" and
-                                child.Name ~= "Left Leg" and
-                                child.Name ~= "HumanoidRootPart"
-                         then
-                            for _, c in pairs(child:GetChildren()) do
-                                if c:IsA("BodyPosition") or c:IsA("BodyGyro") then
-                                    c:Destroy()
-                                end
-                            end
-                            local ForceInstance = Instance.new("BodyPosition")
-                            ForceInstance.Parent = child
-                            ForceInstance.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
-                            ForceInstance.Position = headPosition
-                            table.insert(Forces, ForceInstance)
-                            if not table.find(frozenParts, child) then
-                                table.insert(frozenParts, child)
-                            end
-                        end
-                    end
-                end
-            end
-            imsosigma = workspace:GetDescendants()
-            for _, part in pairs(imsosigma) do
-                if
-                    part:IsA("BasePart") and not part.Anchored and part.Name ~= "Torso" and part.Name ~= "Head" and
-                        part.Name ~= "Right Arm" and
-                        part.Name ~= "Left Arm" and
-                        part.Name ~= "Right Leg" and
-                        part.Name ~= "Left Leg" and
-                        part.Name ~= "HumanoidRootPart" and
-                        part.Parent ~= game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-                 then
-                    handlePart(part)
-                    part.CanCollide = false
-                end
-            end
-        -- Duration for how long the loop should run (in seconds)
-local duration = coolio  -- Set this to the desired time
-
--- Store the start time
-local startTime = os.time()
-
--- The position you want to set for forces
-
--- Loop to update force positions
-while os.time() - startTime < duration do
-    for _, force in pairs(Forces) do
-    local headPosition = character.Head.Position
-        force.Position = headPosition
     end
-
-    -- Optional: Add a small delay to prevent overwhelming the system
-    wait(0.1)  -- Adjust the wait time as needed
+    return nil
 end
 
-        for _, force in pairs(Forces) do
-            force:Destroy()
+
+    -- Find the target player
+    local input = targetbox.Text
+    local foundPlayer = findPlayer(input)
+    if foundPlayer then
+        if foundPlayer == Players.LocalPlayer then
+            print("targetting yourself")
+        else
         end
-        for _, part in pairs(imsosigma) do
-            if
-                part:IsA("BasePart") and not part.Anchored and part.Name ~= "Torso" and part.Name ~= "Head" and
-                    part.Name ~= "Right Arm" and
-                    part.Name ~= "Left Arm" and
-                    part.Name ~= "Right Leg" and
-                    part.Name ~= "Left Leg" and
-                    part.Name ~= "HumanoidRootPart"
-             then
-                part.CanCollide = true
+        print("Found player: " .. foundPlayer.Name)
+    else
+        print("Player not found")
+        return
+    end
+
+    local targetCharacter = foundPlayer.Character
+    if not targetCharacter or not targetCharacter:FindFirstChild("Head") then
+        return
+    end
+
+    local Forces = {}
+    local frozenParts = {}
+
+    local function handlePart(part)
+        if part:IsA("BasePart") and not part.Anchored and not part:IsDescendantOf(targetCharacter) then
+            -- Ensure part is not part of the local player's character
+            if not part:IsDescendantOf(Players.LocalPlayer.Character) then
+                -- Remove any existing BodyPosition or BodyGyro
+                for _, c in pairs(part:GetChildren()) do
+                    if c:IsA("BodyPosition") or c:IsA("BodyGyro") then
+                        c:Destroy()
+                    end
+                end
+                -- Create and configure BodyPosition
+                local ForceInstance = Instance.new("BodyPosition")
+                ForceInstance.Parent = part
+                ForceInstance.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+                ForceInstance.Position = targetCharacter.Head.Position
+                table.insert(Forces, ForceInstance)
+                if not table.find(frozenParts, part) then
+                    table.insert(frozenParts, part)
+                end
             end
         end
     end
+
+    local imsosigma = workspace:GetDescendants()
+    for _, part in pairs(imsosigma) do
+        if part:IsA("BasePart") and not part.Anchored and part.Parent ~= targetCharacter then
+            handlePart(part)
+            part.CanCollide = false
+        end
+    end
+
+    -- Duration for how long the loop should run (in seconds)
+    local duration = coolio
+    local startTime = os.time()
+
+    -- Loop to update force positions
+    while os.time() - startTime < duration do
+        for _, force in pairs(Forces) do
+            force.Position = targetCharacter.Head.Position
+        end
+        wait(0.1)
+    end
+
+    for _, force in pairs(Forces) do
+        force:Destroy()
+    end
+    for _, part in pairs(imsosigma) do
+        if part:IsA("BasePart") and not part.Anchored then
+            part.CanCollide = true
+        end
+    end
+
     end
     button.MouseButton1Click:Connect(buttonclicked)
 end
