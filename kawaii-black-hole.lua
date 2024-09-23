@@ -1,6 +1,6 @@
 -- MOST OF THIS CODE IS FROM INFINITE YIELD TPUA COMMAND
 -- fixed this for yall since the script is still liked
-
+-- credits to .hellohellohell012321 on discord for the gui
 local G2L = {}
 G2L["1"] = Instance.new("ScreenGui", game:GetService("CoreGui"))
 G2L["2"] = Instance.new("Frame", G2L["1"])
