@@ -1,5 +1,5 @@
 -- MOST OF THIS CODE IS FROM INFINITE YIELD TPUA COMMAND
-loadstring(game:HttpGet("https://raw.githubusercontent.com/hellohellohell012321/discordpopup/main/discord-popup",true))() -- discord invite
+-- fixed this for yall since the script is still liked
 
 local G2L = {}
 G2L["1"] = Instance.new("ScreenGui", game:GetService("CoreGui"))
