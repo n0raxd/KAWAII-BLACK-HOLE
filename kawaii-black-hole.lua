@@ -1,5 +1,7 @@
 -- MOST OF THIS CODE IS FROM INFINITE YIELD TPUA COMMAND
 -- fixed this for yall since the script is still liked
+-- part claim by cool person check him out
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Lukashub-coder/Universal-Part-Claim/refs/heads/main/By%20lukas!!"))()
 -- credits to .hellohellohell012321 on discord for the gui
 local G2L = {}
 G2L["1"] = Instance.new("ScreenGui", game:GetService("CoreGui"))
